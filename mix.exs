@@ -1,3 +1,5 @@
+Code.ensure_loaded?(Hex) and Hex.start
+
 defmodule Hermes.Mixfile do
   use Mix.Project
 
@@ -5,26 +7,20 @@ defmodule Hermes.Mixfile do
     [app: :hermes,
      version: "0.0.1",
      elixir: "~> 0.14.3",
-     deps: deps]
+     deps: deps,
+     package: [
+        files: ["lib", "mix.exs", "README*", "LICENSE*"],
+        contributors: ["Johnny Winn"],
+        licenses: ["Apache 2.0"],
+        links: [ github: "https://github.com/nurugger07/hermes" ]
+      ],
+      description: """
+      Is a mailer component for sending & recieving emails. The name comes from the greek messanger of the gods.
+      """
+   ]
   end
 
-  # Configuration for the OTP application
-  #
-  # Type `mix help compile.app` for more information
-  def application do
-    [applications: []]
-  end
-
-  # Dependencies can be hex.pm packages:
-  #
-  #   {:mydep, "~> 0.3.0"}
-  #
-  # Or git/path repositories:
-  #
-  #   {:mydep, git: "https://github.com/elixir-lang/mydep.git", tag: "0.1"}
-  #
-  # Type `mix help deps` for more examples and options
   defp deps do
-    []
+    [ { :chronos, "~> 0.3.4" } ]
   end
 end
