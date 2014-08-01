@@ -31,7 +31,7 @@ defmodule Hermes.Client do
       { :tcp, _, << "334", _ :: binary>> } ->
         submit_credentials(options, [ user, password ])
       { :tcp, socket, << "4", _ :: binary >> } ->
-        { :error, socket, "Unable to autheticate. Trya again later" }
+        { :error, socket, "Unable to autheticate. Try again later" }
       { :tcp, _, << "500", _ :: binary >>} ->
         authorize options
     after
@@ -47,6 +47,8 @@ defmodule Hermes.Client do
         submit_credentials(options, [password])
       { :tcp, socket, << "235", _ :: binary >> } ->
         options
+      { :tcp, socket, << "4", _ :: binary >> } ->
+        { :error, socket, "Unable to submit credentials" }
     after
       12000 ->
         { :error, options.socket, "Connection timeout for authorization" }
@@ -63,6 +65,8 @@ defmodule Hermes.Client do
     receive do
       { :tcp, socket, << "250", _ :: binary >> } ->
         options
+      { :tcp, socket, << "4", _ :: binary >> } ->
+        { :error, socket, "Unable to set sender" }
     after
       12000 ->
         { :error, options.socket, "Connection timeout setting senders" }
@@ -79,8 +83,8 @@ defmodule Hermes.Client do
     receive do
       { :tcp, socket, << "250", _ :: binary >> } ->
         recipients(options, t)
-      anything ->
-        IO.puts inspect anything
+      { :tcp, socket, << "4", _ :: binary >> } ->
+        { :error, socket, "Unable to set recipients" }
     after
       12000 ->
         { :error, options.socket, "Connection timeout setting recipients" }
@@ -92,7 +96,30 @@ defmodule Hermes.Client do
 
   def send_mail({:error, socket, message}), do: { :error, socket, message }
   def send_mail(options) do
+    :gen_tcp.send(options.socket, "DATA\r\n")
+    receive do
+      { :tcp, socket, << "354", _ :: binary >> } ->
+        transmit_data(options)
+      { :tcp, socket, << "4", _ :: binary >> } ->
+        { :error, socket, "Unable to prepare data transmition" }
+    after
+      12000 ->
+        { :error, options.socket, "Connection timeout setting recipients" }
+    end
+  end
 
+  def transmit_data(options) do
+    body = options.body <> "\r\n.\r\n"
+    :gen_tcp.send(options.socket, body)
+    receive do
+      { :tcp, socket, << "250", _ :: binary >> } ->
+        { :ok, socket, "Message transmitted" }
+      { :tcp, socket, << "4", _ :: binary >> } ->
+        { :error, socket, "Unable to transmit data" }
+    after
+      12000 ->
+        { :error, options.socket, "Connection timeout setting recipients" }
+    end
   end
 
   def quit({:error, socket, message}) do
@@ -105,8 +132,8 @@ defmodule Hermes.Client do
     { :ok, message }
   end
 
-  def quit(options) do
-    :gen_tcp.send options.socket, "QUIT\r\n"
-    :gen_tcp.close options.socket
+  def quit(socket) do
+    :gen_tcp.send socket, "QUIT\r\n"
+    :gen_tcp.close socket
   end
 end
