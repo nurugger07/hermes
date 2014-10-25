@@ -12,7 +12,7 @@ defmodule Hermes.Mixfile do
         files: ["lib", "mix.exs", "README*", "LICENSE*"],
         contributors: ["Johnny Winn"],
         licenses: ["Apache 2.0"],
-        links: [ github: "https://github.com/nurugger07/hermes" ]
+        links: %{"github" => "https://github.com/nurugger07/hermes"}
       ],
       description: """
       Is a mailer component for sending & recieving emails. The name comes from the greek messanger of the gods.
