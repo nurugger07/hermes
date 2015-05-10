@@ -5,14 +5,14 @@ defmodule Hermes.Mixfile do
 
   def project do
     [app: :hermes,
-     version: "0.0.1",
+     version: "0.0.2",
      elixir: "~> 0.14.3",
      deps: deps,
      package: [
         files: ["lib", "mix.exs", "README*", "LICENSE*"],
         contributors: ["Johnny Winn"],
         licenses: ["Apache 2.0"],
-        links: [ github: "https://github.com/nurugger07/hermes" ]
+        links: %{ "Github" => "https://github.com/nurugger07/hemes" }
       ],
       description: """
       Is a mailer component for sending & recieving emails. The name comes from the greek messanger of the gods.
