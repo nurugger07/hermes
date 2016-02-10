@@ -26,7 +26,7 @@ defmodule Hermes.Mixfile do
   defp package do
     [
       files: ["lib", "mix.exs", "README*", "LICENSE*"],
-      contributors: ["Johnny Winn"],
+      maintainers: ["Johnny Winn"],
       licenses: ["Apache 2.0"],
       links: %{ "Github" => "https://github.com/nurugger07/hemes" }
     ]
