@@ -1,10 +1,5 @@
 defmodule SimpleMessenger do
-  use Hermes.Messenger, [
-    domain: "mailtrap.io",
-    port: 2525,
-    username: "your_user_here",
-    password: "your_password_here",
-  ]
+  use Hermes.Messenger
 end
 
 defmodule HermesTest do
@@ -28,6 +23,5 @@ defmodule HermesTest do
 
   test "send emails" do
     assert { :ok, "Message transmitted" } == deliver @message
-    assert "Message transmitted" == deliver! @message
   end
 end
