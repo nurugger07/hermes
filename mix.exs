@@ -28,7 +28,7 @@ defmodule Hermes.Mixfile do
       files: ["lib", "mix.exs", "README*", "LICENSE*"],
       maintainers: ["Johnny Winn"],
       licenses: ["Apache 2.0"],
-      links: %{ "Github" => "https://github.com/nurugger07/hemes" }
+      links: %{ "Github" => "https://github.com/nurugger07/hermes" }
     ]
   end
 end
